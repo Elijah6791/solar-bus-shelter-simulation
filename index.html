@@ -1,0 +1,489 @@
+
+                    Hello! I am your live presentation AI assistant grounded in <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Bus Stop Dashboard - Fairfield</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --panel-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-green: #22c55e;
+            --accent-orange: #f97316;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: var(--panel-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+            border-bottom: 3px solid var(--accent-blue);
+        }
+
+        .header h1 {
+            margin: 0 0 5px 0;
+            color: var(--accent-blue);
+            font-size: 1.8rem;
+        }
+
+        .header p {
+            margin: 0 0 10px 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .team-badge {
+            display: inline-block;
+            background: #0f172a;
+            color: var(--accent-green);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid #334155;
+        }
+
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--panel-bg);
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--panel-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: var(--accent-blue);
+            font-size: 1.2rem;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 10px;
+        }
+
+        .function-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            background: #0f172a;
+            padding: 8px;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-orange);
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .stat-box {
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .stat-box.green { border-left-color: var(--accent-green); }
+        .stat-box.orange { border-left-color: var(--accent-orange); }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .diagram-container {
+            position: relative;
+            width: 100%;
+            height: 290px;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px solid #334155;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .hotspot {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background: var(--accent-blue);
+            color: #0f172a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 0 12px var(--accent-blue);
+            border: 2px solid #ffffff;
+            transition: all 0.2s ease-in-out;
+            z-index: 10;
+        }
+
+        .hotspot:hover {
+            transform: scale(1.3);
+            background: var(--accent-green);
+            box-shadow: 0 0 16px var(--accent-green);
+        }
+
+        .location-select {
+            width: 100%;
+            padding: 10px;
+            background: #0f172a;
+            color: var(--text-light);
+            border: 1px solid #334155;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+
+        .calc-input {
+            margin-bottom: 10px;
+        }
+
+        .calc-input label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+        }
+
+        .calc-input input {
+            width: 100%;
+            padding: 8px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #fff;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            background: var(--accent-blue);
+            color: #000;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn:hover { opacity: 0.9; }
+
+        .info-panel {
+            background: #0f172a;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            line-height: 1.45;
+            min-height: 65px;
+            border: 1px solid #334155;
+        }
+
+        .bus-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .bus-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 7px 0;
+            border-bottom: 1px solid #334155;
+            font-size: 0.88rem;
+        }
+
+        .ai-chat-window {
+            height: 260px;
+            overflow-y: auto;
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #334155;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-bubble {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            line-height: 1.4;
+        }
+
+        .chat-bubble.bot {
+            background: #1e293b;
+            color: #f8fafc;
+            border-left: 3px solid var(--accent-blue);
+            align-self: flex-start;
+        }
+
+        .chat-bubble.user {
+            background: var(--accent-blue);
+            color: #0f172a;
+            font-weight: 600;
+            align-self: flex-end;
+        }
+
+        .ai-quick-btn {
+            background: #0f172a;
+            color: var(--accent-blue);
+            border: 1px solid var(--accent-blue);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            margin-right: 5px;
+            margin-bottom: 8px;
+            transition: all 0.2s;
+        }
+
+        .ai-quick-btn:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .kiosk-mode .controls-bar { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Fairfield Smart Solar & Wind Bus Shelter</h1>
+        <p>Interactive System Model, Live Energy Performance & Infrastructure Dashboard</p>
+        <div class="team-badge">Project Creators: Elijah, Yousif, Yamen & Caleb</div>
+    </div>
+
+    <div class="controls-bar">
+        <div>
+            <strong style="font-size: 0.9rem; color: var(--accent-blue);">Weather Simulator:</strong>
+            <button class="btn" style="background:#f97316; color:#fff; margin-left:8px;" onclick="setWeather('sunny')">Sunny Summer</button>
+            <button class="btn" style="background:#64748b; color:#fff; margin-left:5px;" onclick="setWeather('overcast')">Overcast Winter</button>
+            <button class="btn" style="background:#22c55e; color:#fff; margin-left:5px;" onclick="setWeather('storm')">Stormy Night</button>
+        </div>
+        <div>
+            <button class="btn" style="background:#22c55e; color:#000;" onclick="toggleKioskMode()">Toggle Kiosk Display Mode</button>
+        </div>
+    </div>
+
+    <div class="grid-container">
+
+        <!-- Real-Time Metrics & Weather Simulator -->
+        <div class="card">
+            <h2>1. Live Energy Generation & Carbon Offset</h2>
+            <div class="function-desc">
+                <strong>What this does:</strong> Displays real-time power generation from solar and wind inputs, tracking battery reserves and total CO2 reduction.
+            </div>
+            <div class="stat-grid">
+                <div class="stat-box orange">
+                    <div class="stat-label">Solar Output</div>
+                    <div class="stat-value" id="solar-val">380 W</div>
+                </div>
+                <div class="stat-box blue">
+                    <div class="stat-label">Wind Turbine</div>
+                    <div class="stat-value" id="wind-val">70 W</div>
+                </div>
+                <div class="stat-box green">
+                    <div class="stat-label">Daily CO2 Offset</div>
+                    <div class="stat-value" id="co2-val">1.8 kg</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">LiFePO4 Battery</div>
+                    <div class="stat-value" style="color: var(--accent-green);" id="batt-val">94%</div>
+                </div>
+            </div>
+            <canvas id="energyChart" height="160"></canvas>
+        </div>
+
+        <!-- Structural Component Inspector -->
+        <div class="card">
+            <h2>2. Structural Component Inspector</h2>
+            <div class="function-desc">
+                <strong>What this does:</strong> Click numbered pins on the schematic model to inspect hardware specs, energy outputs, and maintenance lifespans.
+            </div>
+            <div class="diagram-container">
+                <svg width="340" height="240" viewBox="0 0 340 240">
+                    <defs>
+                        <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.3"/>
+                            <stop offset="100%" stop-color="#0f172a" stop-opacity="0.05"/>
+                        </linearGradient>
+                    </defs>
+
+                    <rect x="20" y="215" width="300" height="14" fill="#334155" rx="3"/>
+                    <rect x="50" y="70" width="10" fill="#64748b" height="145" rx="2"/>
+                    <rect x="270" y="70" width="10" fill="#64748b" height="145" rx="2"/>
+                    <rect x="160" y="70" width="6" fill="#475569" height="145"/>
+
+                    <rect x="55" y="80" width="220" height="135" fill="url(#glassGrad)" stroke="#38bdf8" stroke-width="1.5" rx="4"/>
+
+                    <rect x="80" y="172" width="160" height="10" fill="#94a3b8" rx="2"/>
+                    <rect x="95" y="182" width="8" fill="#64748b" height="33"/>
+                    <rect x="225" y="182" width="8" fill="#64748b" height="33"/>
+
+                    <polygon points="30,70 300,70 290,60 40,60" fill="#475569"/>
+
+                    <polygon points="45,58 285,58 275,44 55,44" fill="#f97316"/>
+                    <line x1="115" y1="44" x2="120" y2="58" stroke="#ea580c" stroke-width="1.5"/>
+                    <line x1="165" y1="44" x2="165" y2="58" stroke="#ea580c" stroke-width="1.5"/>
+                    <line x1="215" y1="44" x2="210" y2="58" stroke="#ea580c" stroke-width="1.5"/>
+
+                    <line x1="265" y1="44" x2="265" y2="15" stroke="#cbd5e1" stroke-width="3"/>
+                    <circle cx="265" cy="18" r="13" fill="none" stroke="#22c55e" stroke-width="2.5"/>
+                    <ellipse cx="265" cy="18" rx="4" ry="12" fill="#22c55e"/>
+
+                    <rect x="62" y="165" width="28" height="48" fill="#1e293b" stroke="#22c55e" stroke-width="2" rx="3"/>
+                    <circle cx="76" cy="175" r="3" fill="#22c55e"/>
+                    <line x1="68" y1="185" x2="84" y2="185" stroke="#475569" stroke-width="2"/>
+                    <line x1="68" y1="193" x2="84" y2="193" stroke="#475569" stroke-width="2"/>
+
+                    <rect x="70" y="72" width="180" height="4" fill="#f8fafc"/>
+                    <rect x="190" y="90" width="75" height="42" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5" rx="3"/>
+                    <line x1="196" y1="102" x2="245" y2="102" stroke="#38bdf8" stroke-width="2"/>
+                    <line x1="196" y1="114" x2="230" y2="114" stroke="#22c55e" stroke-width="2"/>
+                </svg>
+
+                <div class="hotspot" style="top: 35px; left: 145px;" onclick="showInfo('solar')">1</div>
+                <div class="hotspot" style="top: 10px; right: 55px;" onclick="showInfo('wind')">2</div>
+                <div class="hotspot" style="bottom: 35px; left: 62px;" onclick="showInfo('battery')">3</div>
+                <div class="hotspot" style="bottom: 50px; left: 155px;" onclick="showInfo('seating')">4</div>
+                <div class="hotspot" style="top: 75px; left: 110px;" onclick="showInfo('lights')">5</div>
+            </div>
+            <br>
+            <div class="info-panel" id="info-display">
+                Click any numbered hotspot on the bus shelter model above to review detailed engineering rationale and lifespan metrics.
+            </div>
+        </div>
+
+        <!-- Location & Seating -->
+        <div class="card">
+            <h2>3. Fairfield Deployment & Transit Timetable</h2>
+            <div class="function-desc">
+                <strong>What this does:</strong> Switches between key Fairfield hubs to display passenger capacity (4 seated, 6-8 standing) and live bus arrivals.
+            </div>
+            <select class="location-select" id="location-select" onchange="updateLocation()">
+                <option value="interchange">Fairfield Station Interchange (The Crescent)</option>
+                <option value="suburban">Suburban Route (The Horsley Drive)</option>
+                <option value="showground">Fairfield Showground (Smithfield Rd)</option>
+            </select>
+
+            <div class="stat-grid">
+                <div class="stat-box">
+                    <div class="stat-label">Seating Capacity</div>
+                    <div class="stat-value" id="seat-cap">4 Seated</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Standing Cover</div>
+                    <div class="stat-value" id="stand-cap">6-8 People</div>
+                </div>
+            </div>
+
+            <div class="info-panel" style="margin-bottom: 10px;" id="loc-info">
+                <strong>Location Notes:</strong> High commuter density at Fairfield Station (The Crescent). Maximum ad revenue exposure.
+            </div>
+
+            <h3 style="font-size: 0.85rem; color: var(--accent-blue); margin-bottom: 5px;">Live Bus Arrivals</h3>
+            <ul class="bus-list" id="bus-list">
+                <li class="bus-item"><span>804 to Parramatta</span> <strong>4 mins</strong></li>
+                <li class="bus-item"><span>808 to Liverpool</span> <strong>9 mins</strong></li>
+                <li class="bus-item"><span>817 to Cabramatta</span> <strong>15 mins</strong></li>
+            </ul>
+        </div>
+
+        <!-- ROI & Ad Revenue Calculator -->
+        <div class="card">
+            <h2>4. Financial ROI & Advertising Payback</h2>
+            <div class="function-desc">
+                <strong>What this does:</strong> Calculates net maintenance costs ($1,000/yr) and payback period offset by digital ad displays.
+            </div>
+            <div class="calc-input">
+                <label>Initial Shelter CapEx ($):</label>
+                <input type="number" id="capex" value="28000" oninput="calculateROI()">
+            </div>
+            <div class="calc-input">
+                <label>Annual Maintenance Fee ($):</label>
+                <input type="number" id="maint" value="1000" oninput="calculateROI()">
+            </div>
+            <div class="calc-input">
+                <label>Est. Annual Digital Ad Revenue ($):</label>
+                <input type="number" id="adrev" value="2500" oninput="calculateROI()">
+            </div>
+
+            <div class="stat-grid" style="margin-top:10px;">
+                <div class="stat-box green">
+                    <div class="stat-label">Net Annual Income</div>
+                    <div class="stat-value" id="net-income">$1,500/yr</div>
+                </div>
+                <div class="stat-box orange">
+                    <div class="stat-label">Payback Period</div>
+                    <div class="stat-value" id="payback">18.6 yrs</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Smart AI Presentation Assistant -->
+        <div class="card" style="grid-column: 1 / -1;">
+            <h2>5. Smart Shelter AI Presentation Assistant</h2>
+            <div class="function-desc">
+                <strong>What this does:</strong> Evaluators can ask any custom question about Elijah, Yousif, Yamen & Caleb's design and get intelligent answers!
+            </div>
+            
+            <div>
+                <button class="ai-quick-btn" onclick="askQuick('How does the hybrid system work?')">Hybrid Power Rationale</button>
+                <button class="ai-quick-btn" onclick="askQuick('How will the project be built?')">Construction & Build Method</button>
+                <button class="ai-quick-btn" onclick="askQuick('What is the energy consumption?')">Energy Consumption & Draw</button>
+                <button class="ai-quick-btn" onclick="askQuick('What are the lifespans and maintenance costs?')">Lifespans & Maintenance</button>
+                <button class="ai-quick-btn" onclick="askQuick('How does digital ad revenue payback work?')">Ad Revenue & Payback</button>
+            </div>
+
+            <div class="ai-chat-window" id="ai-chat-window">
+                <div class="chat-bubble bot">
+                    Hello! I am your live presentation AI assistant grounded in Elijah, Yousif, Yamen, and Caleb'
